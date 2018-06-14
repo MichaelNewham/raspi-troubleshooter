@@ -1,56 +1,103 @@
 # raspi-troubleshooter
 A step-by-step approach to troubleshooting a Raspberry Pi computer running Raspbian
 
+[Skip ahead to troubleshooting section](#top)
+
+> A credit card—sized single-board computer, the **Raspberry Pi** is affordable-yet-powerful with four cores of processing power at a cost of approximately US$35
+> 
+> **Raspbian** is the underlying operating system for Raspberry and is itself based on Debian
+
 ## Overview
 I've created this interactive troubleshooter specifically to assist with a Raspberry computer which has been imaged with [OctoPi](https://github.com/guysoft/OctoPi); however, I've also included information about the native Raspbian-imaged computers as well. I assume that Raspbian Stretch is the underlying operating system regardless.
+
+> **OctoPrint** is the leading web software for controlling 3D printers, created/maintained by Gina Häußge
+>
+> **OctoPi** is a Raspberry-specific distro of OctoPrint, maintained by Guy Sheffer
 
 ## <a name="top"></a>Start Here
 Select a link throughout this guide to move to the next set of information and instructions.
 
-* [Need to remote in with SSH](#head_RemoteSSH)
-* [Need to enable SSH](#head_EnableSSH)
+* [Download OctoPrint for a Raspberry (OctoPi)](#head_Download)
+* [Burn OctoPi image to microSD](#head_Image)
+* [Prepare microSD for wi-fi connectivity](#head_PrepareForWifi)
+* [Bring up the OctoPrint console in a browser](#head_OctoPrint)
+* [OctoPrint's Setup Wizard](#head_SetupWizard)
+* [Remote in with SSH](#head_RemoteSSH)
+* [Enable SSH](#head_EnableSSH)
 * [SSH won't allow connection](#head_EnableSSH)
-* [Need to change the default hostname](#head_ChangingHostname)
+* [Change the default hostname](#head_ChangingHostname)
 * [New installation, no wi-fi connection](#head_NewInstallationNoWifiConnection)
 * [Wi-fi can't see hidden zone](#head_WifiCannotSeeHiddenZone)
 * [Lightning Bolt seen in Desktop](#head_LightningBolt)
-* [Need to log in locally](#head_LoginLocally)
-* [Need to edit files on the microSD's boot partition from a workstation](#head_Mount-microSD)
-* [Need to connect an Ethernet cable](#head_Ethernet)
-* [Need to check for throttling](#head_TestThrottling)
-* [Need to find its IP address](#head_FindIP-Address)
+* [Log in locally](#head_LoginLocally)
+* [Edit files on the microSD's boot partition from a workstation](#head_Mount-microSD)
+* [Connect an Ethernet cable](#head_Ethernet)
+* [Check for throttling](#head_TestThrottling)
+* [Find the Raspberry's IP address](#head_FindIP-Address)
 * [Raspi won't connect to wi-fi](#head_WifiCannotConnect)
-* [Need to test name resolution](#head_TestNameResolution)
-* [Need to turn off Bluetooth](#head_TurnOffBluetooth)
-* [Need to test wi-fi signal strength](#head_TestWifiStrength)
+* [Test name resolution](#head_TestNameResolution)
+* [Turn off Bluetooth](#head_TurnOffBluetooth)
+* [Test wi-fi signal strength](#head_TestWifiStrength)
+* [Interpret LED lights on Raspberry](#head_LED-Lights)
+* [Return to start](#top)
+
+## <a name="head_Download"></a>How to download OctoPi
+Guy Sheffer maintains a Raspberry Pi—specific image of OctoPrint which includes support for a webcam. Having downloaded the image, you'll next want to burn the image to a microSD card which is at least 4GB in size although 8GB or greater would be recommended if you have a webcam.
+
+* Download [OctoPi](https://github.com/guysoft/OctoPi) from the repository
+* [Burn OctoPi image to microSD](#head_Image)
+* [Return to start](#top)
+
+## <a name="head_Image"></a>How to burn OctoPi to microSD
+On OSX, either ApplePi-Baker or Etcher are good options for burning the previously-downloaded OctoPi image file to the microSD card. For Windows, Etcher is a personal favorite.
+
+> **Etcher** is a graphical SD card writing tool that works on Mac OS, Linux and Windows, and is the easiest option for most users. Etcher also supports writing images directly from the zip file, without any unzipping required.
+
+> **ApplePi-Baker** is for MacOS X only, allowing you to prepare an SD-Card for use with a Raspberry Pi. Its internal method of writing to the media appears to be faster than copying to the standard device itself with `dd`.
+
+Place the microSD card into a USB or SD style of adapter and then insert it into your workstation. Running either Etcher or ApplePi-Baker, select the recently-downloaded image file (it's unnecessary to unzip it) and choose the option to burn it to the microSD card.
+
+Since either software should auto-eject the microSD after burning, it would be necessary to remove/re-insert in order to do the minimal edits to enable wi-fi connectivity. (Attempt to safely eject the microSD first, though, if this is an option.)
+
+* Download [Etcher](https://etcher.io)
+* Download [ApplePi-Baker](https://www.tweaking4all.com/software/macosx-software/macosx-apple-pi-baker/)
+* Prepare for wi-fi connectivity with [minimum edits](#head_PrepareForWifi)
+* [Return to start](#top)
+
+## <a name="head_PrepareForWifi"></a>Minimum edits required before using burned microSD
+In order to automatically connect to your wi-fi network, some minimal edits to the files on the microSD card are necessary before attempting to boot up OctoPi. Answer the question below to be directed to the appropriate section:
+
+* Is your wi-fi zone hidden? [yes](#head_WifiCannotSeeHiddenZone) [no](#head_WifiCannotConnect)
 * [Return to start](#top)
 
 ## <a name="head_NewInstallationNoWifiConnection"></a>New installation, no wi-fi connection
+Read below and follow a link if it applies to you:
+
 * Is your wi-fi zone hidden? [yes](#head_WifiCannotSeeHiddenZone)
 * Did you set the country code for your wi-fi zone? [no](#head_WifiCannotConnect)
 * Wi-fi still won't connect? [yes](#head_WifiCannotConnect)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotSeeHiddenZone"></a>Wi-fi cannot see hidden zone
+## <a name="head_WifiCannotSeeHiddenZone"></a>Wi-fi cannot see hidden zone... or need to edit boot files
 A hidden wi-fi zone means that it doesn't broadcast its name (SSID) every minute. As a result of this, your Raspberry's configuration must be done manually.
 
 As an alternate choice, connect an Ethernet cable for connectivity.
 
 It's necessary to add the `scan_ssid=1` command to one of two files, depending upon how you're setting this up:
 
-* [OctoPi image](#head_WifiCannotSeeHiddenZoneOctoPi)
-* [Raspbian image](#head_WifiCannotSeeHiddenZoneRaspbian)
+* I setup my Raspberry with an [OctoPi image](#head_WifiCannotSeeHiddenZoneOctoPi)
+* I setup my Raspberry with a [Raspbian image](#head_WifiCannotSeeHiddenZoneRaspbian)
 * [Connect Ethernet cable](#head_Ethernet)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotConnect"></a>Wi-fi cannot connect
+## <a name="head_WifiCannotConnect"></a>Wi-fi cannot connect... or need to edit boot files
 
 As an alternate choice, connect an Ethernet cable for connectivity.
 
 It might be necessary to edit a configuration file, depending upon how you're setting this up:
 
-* [OctoPi image](#head_WifiCannotConnectOctoPi)
-* [Raspbian image](#head_WifiCannotConnectRaspbian)
+* I setup my Raspberry with an [OctoPi image](#head_WifiCannotConnectOctoPi)
+* I setup my Raspberry with a [Raspbian image](#head_WifiCannotConnectRaspbian)
 * [Connect Ethernet cable](#head_Ethernet)
 * [Return to start](#top)
 
@@ -77,7 +124,7 @@ network={
 * [Remote in via SSH](#head_RemoteSSH)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotConnectRaspbian"></a>Wi-fi cannot connect (Raspbian)
+## <a name="head_WifiCannotConnectRaspbian"></a>Wi-fi cannot connect (Raspbian)... or need to edit config files
 
 Logging in locally or by remoting into your Raspberry via SSH (temporarily connecting an Ethernet cable for connectivity), run `sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` and manually configure the wi-fi settings. Make sure the two-letter country code is correct.
 
@@ -97,7 +144,7 @@ network={
 * [Remote in via SSH](#head_RemoteSSH)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotSeeHiddenZoneOctoPi"></a>Wi-fi cannot see hidden zone (OctoPi)
+## <a name="head_WifiCannotSeeHiddenZoneOctoPi"></a>Wi-fi cannot see hidden zone (OctoPi)... or need to edit boot files
 Either logging in locally or mounting the microSD on your workstation, create and/or edit the file `octopi-wpa-supplicant.txt` on the `boot` partition. Note that the SSID and PSK values are case-sensitive.
 
 The `scan_ssid=1` value removes the requirement to scan for your hidden zone. Make sure the two-letter country code is correct.
@@ -119,7 +166,7 @@ network={
 * [Mounting the microSD in your workstation](#head_Mount-microSD)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotConnectOctoPi"></a>Wi-fi cannot connect (OctoPi)
+## <a name="head_WifiCannotConnectOctoPi"></a>Wi-fi cannot connect (OctoPi)... or need to edit boot files
 Either logging in locally or mounting the microSD on your workstation, create and/or edit the file `octopi-wpa-supplicant.txt` on the `boot` partition. Note that the SSID and PSK values are case-sensitive. Make sure the two-letter country code is correct.
 
 ```
@@ -149,6 +196,27 @@ In the Desktop (PIXEL) version of Raspbian, a lightning bolt symbol will appear 
 The easiest way to change the hostname of a Raspberry Pi computer is by running the `sudo raspi-config` program after remoting into it and choosing option `2 Hostname`.
 
 Expect a forced reboot after finishing, remembering to use the new hostname when reconnecting.
+
+* [Return to start](#top)
+
+## <a name="head_OctoPrint"></a>Bring up the OctoPrint console in a browser
+For OSX users (or Windows/Linux users who have installed Bonjour), in your workstation's browser visit the `http://octopi.local` URL.
+
+For Windows users, it might be necessary to use the IP address of the Raspberry instead of its hostname by substituting it during the browser session which might look like `http://192.168.1.20`, for example.
+
+* [Visit OctoPrint the first time after a new install](#head_SetupWizard)
+* [Test name resolution](#head_TestNameResolution)
+* [Find the Raspberry's IP address](#head_FindIP-Address)
+* [Return to start](#top)
+
+## <a name="head_SetupWizard"></a>OctoPrint Setup Wizard
+When visiting the OctoPrint console the first time after a new install, a Setup Wizard will be presented.
+
+During the setup, configuring **Access Control** is an option or may be left to the default. This would require you to log into OctoPrint when visiting its URL.
+
+There is an option for configuring the default **printer profile**. It would be necessary to enter some details about your printer's dimensions and behavior.
+
+Likewise, there is an option to enable/disable an **Internet connectivity check**. This would minimize processing resource-intensive operations like checking for updates if there's no connectivity.
 
 * [Return to start](#top)
 
@@ -274,10 +342,22 @@ sudo iwconfig wlan0
 
 * [Return to start](#top)
 
+## <a name="head_LED-Lights"></a>Understand LED lights on Raspberry
+All Raspberry Pi boards have status LEDs positioned in one corner next to the 3.5mm audio jack and USB port(s). The number of LEDs is based upon which model.
+
+1. `ACT` – D5 (Green) – SD Card Access. The normal status is to flash when the microSD is read from or written to. While Raspbian is attempting to first get booted, this will be a faint green glow. If it never goes to a brighter green then it was a boot failure. If the light flashes brightly from one to eight times and will not boot, the number is indicative to where it failed in the boot process.
+2. `PWR` – D6 (Red) – 3.3 V Power is present. The normal status is to remain on. This LED will intermittently go off during moments when the input voltage falls below 4.64V DC. A blinking LED indicates a problem.
+3. `FDX` – D7 (Green/Orange) – Full Duplex (LAN) connected. The normal status is on when Ethernet is in full duplex.
+4. `LNK` – D8(Green/Orange) – Link/Activity (LAN). The normal status is on when Ethernet is linked to a hub, router or another adapter via a cross-over cable.
+5. `100` – D9(Yellow/Orange) – 100Mbit (LAN) connected. The normal status is on when 100Mbps and off when only 10Mbps.
+
+* [Adafruit blog post regarding LEDs](https://blog.adafruit.com/2013/02/15/raspberry-pi-status-leds-explained-piday-raspberrypi-raspberry_pi/)
+* [Raspberry Pi troubleshooting](https://elinux.org/R-Pi_Troubleshooting#Normal_LED_status)
+* [Return to start](#top)
 
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|raspi-troubleshooter|v1.0.3|OutsourcedGuru|June 13, 2018|
+|raspi-troubleshooter|v1.0.4|OutsourcedGuru|June 13, 2018|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|
