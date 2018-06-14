@@ -21,11 +21,14 @@ Select a link throughout this guide to move to the next set of information and i
 * [Need to find its IP address](#head_FindIP-Address)
 * [Raspi won't connect to wi-fi](#head_WifiCannotConnect)
 * [Need to test name resolution](#head_TestNameResolution)
+* [Need to turn off Bluetooth](#head_TurnOffBluetooth)
+* [Need to test wi-fi signal strength](#head_TestWifiStrength)
 * [Return to start](#top)
 
 ## <a name="head_NewInstallationNoWifiConnection"></a>New installation, no wi-fi connection
 * Is your wi-fi zone hidden? [yes](#head_WifiCannotSeeHiddenZone)
 * Did you set the country code for your wi-fi zone? [no](#head_WifiCannotConnect)
+* Wi-fi still won't connect? [yes](#head_WifiCannotConnect)
 * [Return to start](#top)
 
 ## <a name="head_WifiCannotSeeHiddenZone"></a>Wi-fi cannot see hidden zone
@@ -240,9 +243,41 @@ This would represent a successful name resolution lookup from `octopi.local` to 
 
 * [Return to start](#top)
 
+## <a name="head_TurnOffBluetooth"></a>Turning off Bluetooth
+The Bluetooth capabilities built into the Raspberry use the better of the two UARTs inside the main chip. By turning off the Bluetooth device driver, this can sometimes free up that good UART (like for a Prusa soldered installation of a Pi Zero).
+
+Logging in locally or remoting in via SSH, run `sudo nano /boot/config.txt` and add at the bottom:
+
+```
+dtoverlay=pi3-disable-bt
+```
+
+Save and exit from **nano**. Follow-up with:
+
+```
+sudo systemctl disable hciuart.service
+sudo systemctl disable bluealsa.service
+sudo systemctl disable bluetooth.service
+```
+
+* [Return to start](#top)
+
+## <a name="head_TestWifiStrength"></a>Testing wi-fi signal strength
+Sometimes it's necessary to audit the wi-fi space to test signal strength and for the existence of competing neighbors' zones.
+
+Logging in locally or remoting in via SSH, run the following:
+
+```
+sudo iwlist wlan0 scan | egrep "Cell|ESSID|Signal|Rates"
+sudo iwconfig wlan0
+```
+
+* [Return to start](#top)
+
+
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|raspi-troubleshooter|v1.0.1|OutsourcedGuru|June 13, 2018|
+|raspi-troubleshooter|v1.0.2|OutsourcedGuru|June 13, 2018|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|
