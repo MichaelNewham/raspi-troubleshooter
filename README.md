@@ -277,7 +277,7 @@ sudo iwconfig wlan0
 
 |Description|Version|Author|Last Update|
 |:---|:---|:---|:---|
-|raspi-troubleshooter|v1.0.2|OutsourcedGuru|June 13, 2018|
+|raspi-troubleshooter|v1.0.3|OutsourcedGuru|June 13, 2018|
 
 |Donate||Cryptocurrency|
 |:-----:|---|:--------:|
