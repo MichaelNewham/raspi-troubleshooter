@@ -28,6 +28,7 @@ Select a link throughout this guide to move to the next set of information and i
 * [Change the default hostname](#head_ChangingHostname)
 * [New installation, no wi-fi connection](#head_NewInstallationNoWifiConnection)
 * [Wi-fi can't see hidden zone](#head_WifiCannotSeeHiddenZone)
+* [Scan for wi-fi zones](#head_ScanForWifi)
 * [Lightning Bolt seen in Desktop](#head_LightningBolt)
 * [Log in locally](#head_LoginLocally)
 * [Edit files on the microSD's boot partition from a workstation](#head_Mount-microSD)
@@ -90,14 +91,123 @@ It's necessary to add the `scan_ssid=1` command to one of two files, depending u
 * [Connect Ethernet cable](#head_Ethernet)
 * [Return to start](#top)
 
-## <a name="head_WifiCannotConnect"></a>Wi-fi cannot connect... or need to edit boot files
-
-As an alternate choice, connect an Ethernet cable for connectivity.
-
-It might be necessary to edit a configuration file, depending upon how you're setting this up:
+## <a name="head_WifiCannotConnect"></a>Wi-fi won't connect... or need to edit boot files
 
 * I setup my Raspberry with an [OctoPi image](#head_WifiCannotConnectOctoPi)
 * I setup my Raspberry with a [Raspbian image](#head_WifiCannotConnectRaspbian)
+* [Connect Ethernet cable](#head_Ethernet)
+* [Return to start](#top)
+
+## <a name="head_ScanForWifi"></a>Scan for wi-fi zones
+Running the following from your Raspberry will indicate what wi-fi zones that it can see, the relative strength of each signal and the competition for those coveted channels: 1, 6 and 11.
+
+```
+sudo iwlist wlan0 scan | grep -v "IE:" | grep -v "Extra:" | grep -v "Mode:" | grep -v "Encryption key" | grep -v "Mb/s" | grep -v "Cipher" | grep -v "Authentication"
+```
+
+```
+wlan0     Scan completed :
+          Cell 01 - Address: 92:3B:AD:B1:E8:AD
+                    Channel:4
+                    Frequency:2.427 GHz (Channel 4)
+                    Quality=70/70  Signal level=-34 dBm  
+                    ESSID:"Nacho-Wi-Fi"
+          Cell 02 - Address: 5C:8F:E0:59:37:ED
+                    Channel:1
+                    Frequency:2.412 GHz (Channel 1)
+                    Quality=47/70  Signal level=-63 dBm  
+                    ESSID:"5937ED"
+          Cell 03 - Address: 10:0D:7F:DB:7E:AC
+                    Channel:3
+                    Frequency:2.422 GHz (Channel 3)
+                    Quality=39/70  Signal level=-71 dBm  
+                    ESSID:"DB7EAC"
+          Cell 04 - Address: 96:3B:AD:B1:E8:AD
+                    Channel:4
+                    Frequency:2.427 GHz (Channel 4)
+                    Quality=70/70  Signal level=-35 dBm  
+                    ESSID:""
+          Cell 05 - Address: 96:3B:AD:B3:D8:46
+                    Channel:4
+                    Frequency:2.427 GHz (Channel 4)
+                    Quality=66/70  Signal level=-44 dBm  
+                    ESSID:""
+          Cell 06 - Address: 92:3B:AD:B3:D8:46
+                    Channel:4
+                    Frequency:2.427 GHz (Channel 4)
+                    Quality=65/70  Signal level=-45 dBm  
+                    ESSID:"Nacho-Wi-Fi"
+          Cell 07 - Address: 38:70:0C:77:8A:56
+                    Channel:6
+                    Frequency:2.437 GHz (Channel 6)
+                    Quality=41/70  Signal level=-69 dBm  
+                    ESSID:"778A56"
+          Cell 08 - Address: 88:D7:F6:65:0B:A8
+                    Channel:10
+                    Frequency:2.457 GHz (Channel 10)
+                    Quality=57/70  Signal level=-53 dBm  
+                    ESSID:"RT-AC1750_B1_A8_2G"
+          Cell 09 - Address: FC:3F:DB:68:90:DE
+                    Channel:6
+                    Frequency:2.437 GHz (Channel 6)
+                    Quality=23/70  Signal level=-87 dBm  
+                    ESSID:"DIRECT-DD-HP ENVY 7640 series"
+          Cell 10 - Address: 10:0D:7F:E2:28:36
+                    Channel:11
+                    Frequency:2.462 GHz (Channel 11)
+                    Quality=32/70  Signal level=-78 dBm  
+                    ESSID:"E22836"
+          Cell 11 - Address: 94:C1:50:C1:EB:22
+                    Channel:10
+                    Frequency:2.457 GHz (Channel 10)
+                    Quality=30/70  Signal level=-80 dBm  
+                    ESSID:"ATT427"
+          Cell 12 - Address: F8:CF:C5:FE:AA:66
+                    Channel:11
+                    Frequency:2.462 GHz (Channel 11)
+                    Quality=27/70  Signal level=-83 dBm  
+                    ESSID:"MOTO1534"
+          Cell 13 - Address: 2C:30:33:E0:77:BC
+                    Channel:4
+                    Frequency:2.427 GHz (Channel 4)
+                    Quality=32/70  Signal level=-78 dBm  
+                    ESSID:"NETGEAR05"
+          Cell 14 - Address: 40:B0:34:8F:E3:18
+                    Channel:9
+                    Frequency:2.452 GHz (Channel 9)
+                    Quality=21/70  Signal level=-89 dBm  
+                    ESSID:"DIRECT-17-HP ENVY 4520 series"
+          Cell 15 - Address: 58:EF:68:A4:32:23
+                    Channel:9
+                    Frequency:2.452 GHz (Channel 9)
+                    Quality=17/70  Signal level=-93 dBm  
+                    ESSID:"# TEAM RIOS"
+          Cell 16 - Address: 38:3B:C8:11:81:7E
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=30/70  Signal level=-80 dBm  
+                    ESSID:"dantauKING"
+          Cell 17 - Address: 38:70:0C:57:51:9E
+                    Channel:11
+                    Frequency:2.462 GHz (Channel 11)
+                    Quality=24/70  Signal level=-86 dBm  
+                    ESSID:"2.4GhzDigitalFellatio"
+          Cell 18 - Address: FA:8F:CA:50:FF:DC
+                    Channel:1
+                    Frequency:2.412 GHz (Channel 1)
+                    Quality=24/70  Signal level=-86 dBm  
+                    ESSID:""
+          Cell 19 - Address: 38:3B:C8:28:BB:82
+                    Channel:8
+                    Frequency:2.447 GHz (Channel 8)
+                    Quality=24/70  Signal level=-86 dBm  
+                    ESSID:"Not Today"
+```
+
+The higher the first number in the Quality ratio, the better the signal strength. The higher (in negative-number terms) of the Signal Level value, the better the signal strength. So `-34 dBm` is better than `-86 dBm`, in other words.
+
+Consider moving your Raspberry Pi closer to the router, adjusting your wi-fi router so that it uses a less-competitive channel or upgrading your router.
+
 * [Connect Ethernet cable](#head_Ethernet)
 * [Return to start](#top)
 
@@ -105,7 +215,7 @@ It might be necessary to edit a configuration file, depending upon how you're se
 
 Logging in locally or by remoting into your Raspberry via SSH (temporarily connecting an Ethernet cable for connectivity), run `sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` and manually configure the wi-fi settings.
 
-The `scan_ssid=1` value removes the requirement to scan for your hidden zone. Make sure the two-letter country code is correct.
+The `scan_ssid=1` value removes the requirement to scan for your hidden zone. Make sure the two-letter country code is correct and the code is in uppercase. The line with the country code should be above the network paragraph.
 
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -126,7 +236,7 @@ network={
 
 ## <a name="head_WifiCannotConnectRaspbian"></a>Wi-fi cannot connect (Raspbian)... or need to edit config files
 
-Logging in locally or by remoting into your Raspberry via SSH (temporarily connecting an Ethernet cable for connectivity), run `sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` and manually configure the wi-fi settings. Make sure the two-letter country code is correct.
+Logging in locally or by remoting into your Raspberry via SSH (temporarily connecting an Ethernet cable for connectivity), run `sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` and manually configure the wi-fi settings. Make sure the two-letter country code is correct and the code is uppercase. The line with the country code should be above the network paragraph.
 
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -147,7 +257,7 @@ network={
 ## <a name="head_WifiCannotSeeHiddenZoneOctoPi"></a>Wi-fi cannot see hidden zone (OctoPi)... or need to edit boot files
 Either logging in locally or mounting the microSD on your workstation, create and/or edit the file `octopi-wpa-supplicant.txt` on the `boot` partition. Note that the SSID and PSK values are case-sensitive.
 
-The `scan_ssid=1` value removes the requirement to scan for your hidden zone. Make sure the two-letter country code is correct.
+The `scan_ssid=1` value removes the requirement to scan for your hidden zone. Make sure the two-letter country code is correct and the code is uppercase. The line with the country code should be above the network paragraph.
 
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -167,7 +277,7 @@ network={
 * [Return to start](#top)
 
 ## <a name="head_WifiCannotConnectOctoPi"></a>Wi-fi cannot connect (OctoPi)... or need to edit boot files
-Either logging in locally or mounting the microSD on your workstation, create and/or edit the file `octopi-wpa-supplicant.txt` on the `boot` partition. Note that the SSID and PSK values are case-sensitive. Make sure the two-letter country code is correct.
+Either logging in locally or mounting the microSD on your workstation, create and/or edit the file `octopi-wpa-supplicant.txt` on the `boot` partition. Note that the SSID and PSK values are case-sensitive. Make sure the two-letter country code is correct and the code is uppercase. The line with the country code should be above the network paragraph.
 
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
